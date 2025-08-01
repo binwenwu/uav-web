@@ -1,0 +1,242 @@
+﻿{
+  "scene": {
+    "center": {
+      "lat": 29.76433,
+      "lng": 113.913188,
+      "alt": 1935.6,
+      "heading": 359.2,
+      "pitch": -33
+    },
+    "scene3DOnly": true,
+    "shadows": false,
+    "removeDblClick": true,
+    "sceneMode": 3,
+    "showSun": true,
+    "showMoon": true,
+    "showSkyBox": true,
+    "showSkyAtmosphere": true,
+    "fog": true,
+    "fxaa": true,
+    "requestRenderMode": true,
+    "contextOptions": {
+      "requestWebgl1": false,
+      "webgl": {
+        "preserveDrawingBuffer": true
+      }
+    },
+    "globe": {
+      "depthTestAgainstTerrain": false,
+      "baseColor": "#546a53",
+      "showGroundAtmosphere": true,
+      "enableLighting": false
+    },
+    "cameraController": {
+      "zoomFactor": 3.0,
+      "minimumZoomDistance": 1,
+      "maximumZoomDistance": 50000000,
+      "enableRotate": true,
+      "enableTranslate": true,
+      "enableTilt": true,
+      "enableZoom": true,
+      "enableCollisionDetection": true,
+      "minimumCollisionTerrainHeight": 15000
+    }
+  },
+  "control": {
+    "cubeView": {
+      "style": { "top": "85px", "right": "10px" },
+      "enabled": true
+    },
+    "toolbar": {
+      "position": "left-bottom"
+    },
+    "clockAnimate": true,
+    "homeButton": true,
+    "fullscreenButton": true,
+    "navigationHelpButton": true,
+    "baseLayerPicker": true,
+    "sceneModePicker": true,
+    "vrButton": false,
+    "animation": false,
+    "timeline": true,
+    "infoBox": false,
+    "geocoder": false,
+    "selectionIndicator": false,
+    "showRenderLoopErrors": true,
+    "contextmenu": {
+      "hasDefault": true
+    },
+    "mouseDownView": true,
+    "zoom": {
+      "enabled": false,
+      "insertIndex": 1
+    },
+    "compass": {
+      "enabled": false,
+      "bottom": "toolbar",
+      "left": "5px"
+    },
+    "distanceLegend": {
+      "left": "10px",
+      "bottom": "2px"
+    },
+    "locationBar": {
+      "crs": "CGCS2000_GK_Zone_3",
+      "crsDecimal": 0,
+      "template": "<div>帧率：{fps}</div><div>经度:{lng}</div> <div>纬度:{lat}</div> <div class='hide1000'>横{crsx}  纵{crsy}</div> <div>海拔：{alt}米</div> <div class='hide700'>层级：{level}</div><div>方向：{heading}°</div> <div>俯仰角：{pitch}°</div><div class='hide700'>视高：{cameraHeight}米</div>"
+    }
+  },
+  "method": {
+    "templateValues": {
+      "mars3d_data": "//data.mars3d.cn",
+      "dataServer": "//data.mars3d.cn",
+      "gltfServerUrl": "//data.mars3d.cn/gltf"
+    }
+  },
+  "terrain": {
+    "url": "https://data.mars3d.cn/terrain",
+    "show": true,
+    "clip": true
+  },
+  "basemaps": [
+    {
+      "id": 10,
+      "name": "地图底图",
+      "type": "group"
+    },
+    {
+      "id": 2021,
+      "pid": 10,
+      "name": "谷歌影像",
+      "icon": "/img/thumbnail/basemap/google_img.png",
+      "type": "google",
+      "layer": "img_d",
+      "show": false
+    },
+    {
+      "pid": 10,
+      "name": "谷歌电子",
+      "icon": "/img/thumbnail/basemap/google_img.png",
+      "type": "google",
+      "layer": "vec",
+      "show": false
+    },
+    {
+      "pid": 10,
+      "name": "天地图影像",
+      "icon": "./img/thumbnail/basemap/tdt_img.png",
+      "type": "group",
+      "layers": [
+        {
+          "name": "底图",
+          "type": "tdt",
+          "layer": "img_d"
+        },
+        {
+          "name": "注记",
+          "type": "tdt",
+          "layer": "img_z"
+        }
+      ],
+      "show": true
+    },
+    {
+      "pid": 10,
+      "name": "天地图电子",
+      "icon": "./img/thumbnail/basemap/tdt_vec.png",
+      "type": "group",
+      "layers": [
+        {
+          "name": "底图",
+          "type": "tdt",
+          "layer": "vec_d"
+        },
+        {
+          "name": "注记",
+          "type": "tdt",
+          "layer": "vec_z"
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "id": 70,
+      "name": "数据资产",
+      "type": "group"
+    },
+    {
+      "pid": 70,
+      "type": "3dtiles",
+      "name": "赤壁三维模型",
+      "url": "./data/chibi-3dtiles/tileset.json",
+      "center": {
+        "lat": 29.76433,
+        "lng": 113.913188,
+        "alt": 1935.6,
+        "heading": 359.2,
+        "pitch": -33
+      },
+      "maximumScreenSpaceError": 32,
+      "maximumMemoryUsage": 4096,
+      "progressiveResolutionHeightFraction": 0.5,
+      "loadSiblings": true,
+      "cullRequestsWhileMoving": true,
+      "cullRequestsWhileMovingMultiplier": 5,
+      "dynamicScreenSpaceError": true,
+      "cullWithChildrenBounds": true,
+      "preferLeaves": true,
+      "preloadWhenHidden": true,
+      "skipLevelOfDetail": true,
+      "cacheBytes": 1073741824,
+      "maximumCacheOverflowBytes": 2147483648,
+      "show": false,
+      "flyTo": true
+    },
+    {
+      "pid": 70,
+      "type": "geojson",
+      "name": "赤壁市行政区划",
+      "url": "./data/赤壁市行政区划边界.geojson",
+      "symbol": {
+        "styleOptions": {
+          "fill": true,
+          "randomColor": true,
+          "opacity": 0.1,
+          "outline": true,
+          "outlineStyle": {
+            "color": "#FD6033",
+            "width": 3,
+            "opacity": 0.5
+          },
+          "label": {
+            "show": true,
+            "text": "{xzjxzqhmc}",
+            "opacity": 1,
+            "font_size": 40,
+            "color": "#ffffff",
+            "font_family": "楷体",
+            "outline": true,
+            "outlineColor": "#000000",
+            "outlineWidth": 3,
+            "background": false,
+            "backgroundColor": "#000000",
+            "backgroundOpacity": 0.1,
+            "font_weight": "normal",
+            "font_style": "normal",
+            "scaleByDistance": true,
+            "scaleByDistance_far": 20000000,
+            "scaleByDistance_farValue": 0.1,
+            "scaleByDistance_near": 1000,
+            "scaleByDistance_nearValue": 1,
+            "distanceDisplayCondition": false,
+            "distanceDisplayCondition_far": 10000,
+            "distanceDisplayCondition_near": 0,
+            "visibleDepth": false
+          }
+        }
+      },
+      "flyTo": true
+    }
+  ]
+}
