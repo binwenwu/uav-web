@@ -96,6 +96,20 @@ interface Props {
   customClass?: string // 自定义class
 
   defaultFold?: boolean // 是否折叠
+
+  /**
+   * 是否启用响应式自适应（默认 true）
+   * 开启后：
+   *   1) 传入的 width 大于 视口宽度 * widthRatio 时，自动夹取到 视口宽度 * widthRatio
+   *   2) 传入的 height 大于 视口高度 * heightRatio 时，自动夹取到 视口高度 * heightRatio
+   *   3) 夹取后 left/top 也会随之收缩，保证弹窗完整可见
+   *   4) 窗口尺寸变化时同样实时夹取
+   * 业务方继续传"理想尺寸"即可，无需关心小屏溢出
+   */
+  responsive?: boolean
+  widthRatio?: number // 视口宽度占比上限，默认 0.95
+  heightRatio?: number // 视口高度占比上限，默认 0.9
+
   thumbnail?: {
     left?: number | string // 定位 left值
     right?: number | string // 定位right值
@@ -117,6 +131,9 @@ const props = withDefaults(defineProps<Props>(), {
   animation: true,
   handles: false,
   defaultFold: false,
+  responsive: true,
+  widthRatio: 0.95,
+  heightRatio: 0.9,
   minWidth: 100,
   minHeight: 100,
   maxWidth: window.innerWidth,
@@ -278,15 +295,15 @@ function initPosition() {
   pannelStyle.zIndex = mergeProps.value.zIndex
   // 横向位置初始化 同时存在优先取left, right 将用来控制宽度
   if (isAllowValue(mergeProps.value.left)) {
-    pannelStyle.left = autoUnit(mergeProps.value.left)
+    pannelStyle.left = autoUnit(clampPosition("left", mergeProps.value.left))
   } else if (mergeProps.value.right) {
-    pannelStyle.right = autoUnit(mergeProps.value.right)
+    pannelStyle.right = autoUnit(clampPosition("right", mergeProps.value.right))
   }
   // 纵向位置初始化 同时存在优先取top, bottom 将用来控制宽度
   if (isAllowValue(mergeProps.value.top)) {
-    pannelStyle.top = autoUnit(mergeProps.value.top)
+    pannelStyle.top = autoUnit(clampPosition("top", mergeProps.value.top))
   } else if (isAllowValue(mergeProps.value.bottom)) {
-    pannelStyle.bottom = autoUnit(mergeProps.value.bottom)
+    pannelStyle.bottom = autoUnit(clampPosition("bottom", mergeProps.value.bottom))
   }
 }
 
@@ -310,6 +327,31 @@ function initSize() {
     h = mergeProps.value.height
   }
   setSize("height", h)
+}
+
+/**
+ * 响应式：把指定方向的定位值收缩到安全范围内
+ * 仅在数值型 left/right/top/bottom 上生效，字符串（含 %、vw 等）不动
+ */
+function clampPosition(attr: "left" | "right" | "top" | "bottom", v: number | string) {
+  if (!mergeProps.value.responsive) {
+    return v
+  }
+  if (typeof v !== "number" || !warpperEle) {
+    return v
+  }
+
+  const wrapperW = warpperEle.offsetWidth || window.innerWidth
+  const wrapperH = warpperEle.offsetHeight || window.innerHeight
+
+  if (attr === "left" || attr === "right") {
+    // 给宽度至少留出 minWidth 的可见空间
+    const maxOffset = Math.max(0, wrapperW - mergeProps.value.minWidth)
+    return Math.min(Math.max(0, v), maxOffset)
+  }
+  // top / bottom
+  const maxOffset = Math.max(0, wrapperH - mergeProps.value.minHeight)
+  return Math.min(Math.max(0, v), maxOffset)
 }
 
 // 开始移动
@@ -399,14 +441,29 @@ function setSize(attr: "width" | "height", v) {
       case "width": {
         if (!isPercentage(value)) {
           value = Math.max(mergeProps.value.minWidth, value)
-          value = Math.min(mergeProps.value.maxWidth, value, warpperEle.offsetWidth)
+          const wrapperW = warpperEle.offsetWidth
+          // 响应式：上限收紧到 视口 * widthRatio，并扣除已设置的 left 偏移
+          let cap = mergeProps.value.responsive
+            ? Math.min(mergeProps.value.maxWidth, wrapperW * mergeProps.value.widthRatio)
+            : mergeProps.value.maxWidth
+          if (mergeProps.value.responsive && typeof mergeProps.value.left === "number") {
+            cap = Math.min(cap, wrapperW - mergeProps.value.left)
+          }
+          value = Math.min(cap, value, wrapperW)
         }
         break
       }
       case "height": {
         if (!isPercentage(value)) {
           value = Math.max(mergeProps.value.minHeight, value)
-          value = Math.min(mergeProps.value.maxHeight, value, warpperEle.offsetHeight)
+          const wrapperH = warpperEle.offsetHeight
+          let cap = mergeProps.value.responsive
+            ? Math.min(mergeProps.value.maxHeight, wrapperH * mergeProps.value.heightRatio)
+            : mergeProps.value.maxHeight
+          if (mergeProps.value.responsive && typeof mergeProps.value.top === "number") {
+            cap = Math.min(cap, wrapperH - mergeProps.value.top)
+          }
+          value = Math.min(cap, value, wrapperH)
         }
         break
       }
@@ -472,6 +529,23 @@ function resize() {
   const pb = dialogRef.value
   if (!warpperEle) {
     return
+  }
+
+  // 响应式：先按视口比例上限重新夹取宽高
+  if (mergeProps.value.responsive && !hasUserSet) {
+    if (isAllowValue(mergeProps.value.width)) {
+      setSize("width", mergeProps.value.width)
+    }
+    if (isAllowValue(mergeProps.value.height)) {
+      setSize("height", mergeProps.value.height)
+    }
+    // 同步把位置夹回安全范围
+    if (isAllowValue(mergeProps.value.left)) {
+      setPosition("left", clampPosition("left", mergeProps.value.left) as number)
+    }
+    if (isAllowValue(mergeProps.value.top)) {
+      setPosition("top", clampPosition("top", mergeProps.value.top) as number)
+    }
   }
 
   if (pb.offsetTop + pb.offsetHeight > warpperEle.offsetHeight) {

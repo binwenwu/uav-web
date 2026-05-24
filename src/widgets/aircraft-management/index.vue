@@ -3,7 +3,7 @@
     <!-- 顶部工具栏 -->
     <div class="aircraft-toolbar">
       <div class="search-controls">
-        <mars-input v-model="searchKeyword" placeholder="搜索机型名称或编码..." style="width: 300px" @change="handleSearch">
+        <mars-input v-model="searchKeyword" placeholder="搜索机型名称或编码..." style="width: 100%; max-width: 300px; min-width: 160px" @change="handleSearch">
           <template #prefix>
             <mars-icon icon="search" :width="16" />
           </template>
@@ -280,6 +280,8 @@ const handleFormSuccess = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 16px;
     padding: 16px;
     background: var(--mars-control-bg);
@@ -289,11 +291,13 @@ const handleFormSuccess = () => {
       display: flex;
       gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .action-controls {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
   }
 

@@ -39,11 +39,12 @@
       </div>
 
       <div class="table-section">
-        <a-table 
-          :columns="columns" 
-          :data-source="filteredReports" 
+        <a-table
+          :columns="columns"
+          :data-source="filteredReports"
           :pagination="pagination"
           :loading="tableLoading"
+          :scroll="{ x: 'max-content' }"
           rowKey="id"
         >
           <template #bodyCell="{ column, record }">
@@ -436,7 +437,7 @@ onMounted(() => {
 
 <style scoped>
 .flight-report {
-  padding: 20px;
+  padding: clamp(10px, 1.2vw, 20px);
   height: 100%;
   overflow-y: auto;
 }
@@ -445,6 +446,8 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 1px solid #f0f0f0;

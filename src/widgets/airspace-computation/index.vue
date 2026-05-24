@@ -264,7 +264,7 @@ onMounted(() => {
 
 <style scoped>
 .airspace-computation {
-  padding: 20px;
+  padding: clamp(10px, 1.2vw, 20px);
   height: 100%;
   overflow-y: auto;
 }
@@ -273,6 +273,8 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 1px solid #f0f0f0;
@@ -287,7 +289,8 @@ onMounted(() => {
 .filter-section {
   display: flex;
   align-items: center;
-  gap: 15px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .filter-section span {

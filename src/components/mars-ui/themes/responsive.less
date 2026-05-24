@@ -1,0 +1,82 @@
+/**
+ * 响应式设计令牌
+ * 统一断点与 clamp 字号台阶，供全站复用
+ *
+ * 使用方式：
+ *   1) Less 文件中 @import "@mars/components/mars-ui/themes/responsive.less"
+ *   2) 直接使用 CSS 变量（已通过 :root 暴露）
+ *
+ * 断点参考主流分辨率：
+ *   xs : < 768   (手机 / 极窄)
+ *   sm : 768  - 1280  (老笔记本 / 平板横屏)
+ *   md : 1280 - 1440  (主流笔记本 1366 / 1440)
+ *   lg : 1440 - 1680  (办公屏)
+ *   xl : 1680 - 1920  (全高清)
+ *   xxl: >= 1920      (2K / 4K)
+ */
+
+/* ---------- Less 变量（编译期使用）---------- */
+@bp-xs: 768px;
+@bp-sm: 1280px;
+@bp-md: 1440px;
+@bp-lg: 1680px;
+@bp-xl: 1920px;
+
+/* ---------- CSS 变量（运行期使用）---------- */
+:root {
+  /* 断点（信息暴露，可在 JS/CSS 内联条件读取） */
+  --bp-xs: 768px;
+  --bp-sm: 1280px;
+  --bp-md: 1440px;
+  --bp-lg: 1680px;
+  --bp-xl: 1920px;
+
+  /* clamp 字号台阶 —— 由小到大平滑缩放，避免分辨率断崖
+     格式：clamp(min, preferred, max)
+     preferred 使用 vw 让字号跟随视宽流体变化 */
+
+  /* 标题级（顶部栏主标题） */
+  --fs-title-xl: clamp(28px, 3.4vw, 65px);
+
+  /* 一级菜单/弹窗标题 */
+  --fs-menu-lg: clamp(14px, 1.45vw, 28px);
+
+  /* 二级菜单/子菜单 */
+  --fs-menu-md: clamp(12px, 1.15vw, 22px);
+
+  /* 正文标准 */
+  --fs-body: clamp(12px, 0.95vw, 16px);
+
+  /* 表格 / 紧凑内容 */
+  --fs-compact: clamp(11px, 0.85vw, 14px);
+
+  /* 图标台阶 —— 与上述字号配套 */
+  --icon-lg: clamp(18px, 1.6vw, 25px);
+  --icon-md: clamp(14px, 1.2vw, 20px);
+
+  /* 顶部栏高度（也跟视宽缩放，避免大屏过矮） */
+  --topbar-h: clamp(56px, 5.5vw, 80px);
+}
+
+/* ---------- Less mixin（封装常用响应式套路）---------- */
+
+/* 极窄屏 - 切换图标-only 模式时统一断点 */
+.mq-xs(@rules) {
+  @media (max-width: @bp-xs) {
+    @rules();
+  }
+}
+
+/* 笔记本及以下 */
+.mq-sm(@rules) {
+  @media (max-width: @bp-sm) {
+    @rules();
+  }
+}
+
+/* 主流办公屏及以下 */
+.mq-md(@rules) {
+  @media (max-width: @bp-md) {
+    @rules();
+  }
+}

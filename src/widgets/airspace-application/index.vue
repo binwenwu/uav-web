@@ -23,10 +23,11 @@
       </div>
 
       <div class="table-section">
-        <a-table 
-          :columns="columns" 
-          :data-source="tableData" 
+        <a-table
+          :columns="columns"
+          :data-source="tableData"
           :pagination="pagination"
+          :scroll="{ x: 'max-content' }"
           rowKey="id"
         >
           <template #bodyCell="{ column, record }">
@@ -281,13 +282,15 @@ onMounted(() => {
 
 <style scoped>
 .airspace-application {
-  padding: 20px;
+  padding: clamp(10px, 1.2vw, 20px);
 }
 
 .header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;        /* 窄屏允许换行 */
+  gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 1px solid #f0f0f0;
@@ -301,11 +304,14 @@ onMounted(() => {
 .filter-section {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .filter-section span {
-  margin-right: 10px;
+  margin-right: 6px;
   color: #666;
+  white-space: nowrap;
 }
 
 .table-section {
